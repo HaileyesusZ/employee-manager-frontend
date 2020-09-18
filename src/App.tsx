@@ -1,14 +1,13 @@
 import React from 'react'
-import LoginPage from './components/LoginPage'
-
-
-
-function App() {
-  return (<div className='App'>
-    
-   <LoginPage />
-
-  </div>)
+import Dashboard from './components/Dashboard'
+import Snackbar from './components/Snackbar'
+const App: React.FC = () => {
+  return (
+    <div className='App'>
+      <Dashboard />
+      <Snackbar />
+    </div>
+  )
 }
 
 export default App

@@ -1,25 +1,28 @@
 import Employee from './employee'
 
-export interface EmployeeState {
-  employees: Employee[]
-}
-export interface ErrorState {
-  error: { message?: string }
+export type EmployeeState = Employee[]
+
+export type ErrorState = { message?: string }
+
+export type FetchingState = boolean
+
+export interface AppState {
+  employees: EmployeeState
+  errors: ErrorState
+  fetching: FetchingState
 }
 
-export interface FetchingState {
-  fetching: boolean
-}
+const initialEmployeeState: EmployeeState = [
+  {
+    id: 788,
+    name: 'haileyesus',
+    salary: 11000,
+    gender: 1,
+    dateOfBirth: '2020-09-12',
+  },
+]
+const initialErrorState: ErrorState = {}
 
-const initialEmployeeState: EmployeeState = {
-  employees: [],
-}
-const initialErrorState: ErrorState = {
-  error: {},
-}
-
-const initialFetchingState: FetchingState = {
-  fetching: false,
-}
+const initialFetchingState: FetchingState = false
 
 export { initialEmployeeState, initialErrorState, initialFetchingState }

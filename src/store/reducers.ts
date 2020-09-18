@@ -24,25 +24,24 @@ const employeeReducer = (
         dateOfBirth: action.payload.dateOfBirth,
       }
 
-      return { employees: state.employees.concat(newEmployee) }
+      return state.concat(newEmployee)
 
     case ACTIONS.SET_EMPLOYEES:
-      return { employees: action.payload.employees }
+      return action.payload
     case ACTIONS.REMOVE_EMPLOYEE:
       // find the index of the employee to remove
-      const indexToRemove = state.employees.findIndex(
+      const indexToRemove = state.findIndex(
         (employee) => employee.id === action.payload
       )
       // remove the employee from the index
-      return {
-        employees: [
-          ...state.employees.slice(0, indexToRemove),
-          ...state.employees.slice(indexToRemove + 1),
-        ],
-      }
+      return [
+        ...state.slice(0, indexToRemove),
+        ...state.slice(indexToRemove + 1),
+      ]
+
     case ACTIONS.UPDATE_EMPLOYEE:
       // find the index of the employee to update
-      const indexToUpdate = state.employees.findIndex(
+      const indexToUpdate = state.findIndex(
         (employee) => employee.id === action.payload.id
       )
       // construct an update employee object
@@ -53,13 +52,13 @@ const employeeReducer = (
         salary: action.payload.salary,
         dateOfBirth: action.payload.dateOfBirth,
       }
-      return {
-        employees: [
-          ...state.employees.slice(0, indexToUpdate),
-          updatedEmployee,
-          ...state.employees.slice(indexToUpdate + 1),
-        ],
-      }
+
+      console.log('payload', action.payload)
+      return [
+        ...state.slice(0, indexToUpdate),
+        updatedEmployee,
+        ...state.slice(indexToUpdate + 1),
+      ]
 
     default:
       return state
@@ -72,9 +71,9 @@ const errorReducer = (
 ): ErrorState => {
   switch (action.type) {
     case ACTIONS.SET_ERROR:
-      return { error: action.payload }
+      return action.payload
     case ACTIONS.CLEAR_ERROR:
-      return { error: {} }
+      return {}
     default:
       return state
   }
@@ -85,24 +84,26 @@ const fetchingReducer = (
   action: Action
 ): FetchingState => {
   switch (action.type) {
+    case ACTIONS.MAKE_REQUEST:
+      return true
     case ACTIONS.FETCHING_EMPLOYEES:
-      return { fetching: true }
+      return true
     case ACTIONS.UPDATING_EMPLOYEE:
-      return { fetching: true }
+      return true
     case ACTIONS.REMOVING_EMPLOYEE:
-      return { fetching: true }
+      return true
 
     case ACTIONS.ADDING_EMPLOYEE:
-      return { fetching: true }
+      return true
     case ACTIONS.CANCEL_REQUEST:
-      return { fetching: false }
+      return false
     default:
       return state
   }
 }
 
 export default combineReducers({
-  employeeReducer,
-  errorReducer,
-  fetchingReducer,
+  employees: employeeReducer,
+  error: errorReducer,
+  fetching: fetchingReducer,
 })

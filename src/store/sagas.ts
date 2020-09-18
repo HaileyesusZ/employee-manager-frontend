@@ -48,7 +48,7 @@ function* updateEmployeeSaga(action: Action) {
       id: action.payload.id,
       employee: action.payload.employee,
     })
-    yield put(updateEmployee(action.payload.id, action.payload.employee))
+    yield put(updateEmployee(action.payload.employee))
   } catch (error) {
     yield put(setError(error.message))
   } finally {

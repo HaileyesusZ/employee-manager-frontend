@@ -3,7 +3,7 @@ import User from '../interfaces/user'
 
 // list of available action types
 enum ACTIONS {
-  REQUEST = 'REQUESTING',
+  MAKE_REQUEST = 'MAKE_REQUEST',
   CANCEL_REQUEST = 'CANCEL_REQUEST',
   FETCHING_EMPLOYEES = 'FETCHING_EMPLOYEES',
   SET_EMPLOYEES = 'SET_EMPLOYEES',
@@ -26,8 +26,8 @@ export type Action = {
 
 // action creators
 
-const request = (): Action => ({
-  type: ACTIONS.REQUEST,
+const makeRequest = (): Action => ({
+  type: ACTIONS.MAKE_REQUEST,
 })
 
 const cancelRequest = (): Action => ({ type: ACTIONS.CANCEL_REQUEST })
@@ -49,9 +49,9 @@ const addEmployee = (employee: Employee): Action => ({
   payload: employee,
 })
 
-const updateEmployee = (id: number, employee: Employee): Action => ({
+const updateEmployee = (employee: Employee): Action => ({
   type: ACTIONS.UPDATE_EMPLOYEE,
-  payload: { id, employee },
+  payload: employee,
 })
 
 const removeEmployee = (id: number): Action => ({
@@ -64,7 +64,7 @@ const removeEmployee = (id: number): Action => ({
 export {
   ACTIONS,
   setError,
-  request,
+  makeRequest,
   setEmployees,
   addEmployee,
   updateEmployee,

@@ -26,9 +26,20 @@
     -->
     <title>React App</title>
   </head>
-  <body>
+  <body class="flex h-screen w-screen">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div class="flex-1" id="root"></div>
+    <div
+      id="modal"
+      class="absolute flex justify-center rounded shadow-xl items-center bg-gray-200"
+      style="left: 40%; top: 10%"
+    ></div>
+    <div
+      id="snackbar"
+      class="absolute flex justify-center rounded shadow-xl items-center bg-gray-900"
+      style="left: 45%; top: 90%"
+    ></div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

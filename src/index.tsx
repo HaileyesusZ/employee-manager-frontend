@@ -1,9 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './assets/css/styles.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-import StyledForm from './styles/index'
 import { Provider } from 'react-redux'
 
 import store from './store'

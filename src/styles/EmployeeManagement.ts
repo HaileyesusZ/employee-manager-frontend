@@ -2,7 +2,8 @@ import styled from 'styled-components'
 import tw from 'twin.macro'
 
 const StyledEmployeeManagement = styled.div.attrs({
-  className: 'flex flex-col flex-grow pl-24 pr-8  bg-gray-100 pt-16',
+  className:
+    'flex flex-col flex-grow pl-24 pr-8 min-h-screen  bg-gray-100 pt-16',
 })`
   & {
   }

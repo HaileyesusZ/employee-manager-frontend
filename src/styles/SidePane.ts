@@ -5,7 +5,7 @@ export interface SidePaneItemProps {
   name: string
 }
 const StyledSidePane = styled.div.attrs({
-  className: 'flex flex-col  h-full bg-teal-700',
+  className: 'flex flex-col  min-h-screen bg-teal-700',
 })``
 
 const StyledProfile = styled.div.attrs({

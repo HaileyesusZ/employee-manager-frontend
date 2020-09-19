@@ -45,7 +45,12 @@ function* updateEmployeeSaga(action: Action) {
     const updated = yield call(
       requestData,
       URL.BASE_URL + `/${action.payload._id}`,
-      action.payload,
+      {
+        name: action.payload.name,
+        gender: action.payload.gender.toString(),
+        salary: action.payload.salary,
+        dateOfBirth: action.payload.dateOfBirth,
+      },
       'PATCH'
     )
 

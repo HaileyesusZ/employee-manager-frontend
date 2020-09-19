@@ -11,7 +11,7 @@ const SnackBar: React.FC = () => {
   return fetching ? (
     ReactDOM.createPortal(
       <StyledSnackbar>
-        <span> {'Request API, Please Wait ...'} </span>
+        <span> {'Requesting Server, Please wait ...'} </span>
       </StyledSnackbar>,
       container
     )

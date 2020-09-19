@@ -1,12 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '../interfaces/state'
-import {
-  cancelRequest,
-  makeRequest,
-  removeEmployee,
-  setEmployees,
-} from '../store/actions'
+import { getEmployeesRequest, removeEmployeeRequest } from '../store/actions'
 import {
   StyledEmployeeManagement,
   StyledIntro,
@@ -29,64 +24,37 @@ export function EmployeeManagement(props: EmployeeManagementProps) {
   // state to show modal
   const [showModal, setShowModal] = useState<boolean>(false)
   // state to set current employee index for update
-  const [currentEmployeeId, setCurrentEmployeeId] = useState<number>(0)
+  const [currentEmployeeId, setCurrentEmployeeId] = useState<string>('')
   // current app state
   const state = useSelector<AppState, AppState>((state) => state)
   const dispatch = useDispatch()
 
+  //  run at app start
+  useEffect(() => {
+    dispatch(getEmployeesRequest())
+  }, [dispatch])
+
   const handleOpenAddEmployeeForm = () => {
-    setCurrentEmployeeId(0)
+    setCurrentEmployeeId('')
     setShowModal(true)
   }
   const handleCloseAddEmployeeForm = () => {
     setShowModal(false)
   }
 
-  const handleEditEmployee = (id: number) => {
+  const handleEditEmployee = (id: string) => {
     if (!showModal) {
       setCurrentEmployeeId(id)
       setShowModal(true)
     }
   }
-  const handleRemoveEmployee = (id: number) => {
+  const handleRemoveEmployee = (id: string) => {
     if (!showModal) {
-      dispatch(makeRequest())
-      setTimeout(() => {
-        dispatch(removeEmployee(id))
-        dispatch(cancelRequest())
-      }, 2000)
+      dispatch(removeEmployeeRequest(id))
     }
   }
   const handleFetchEmployees = () => {
-    dispatch(makeRequest())
-    setTimeout(() => {
-      dispatch(
-        setEmployees([
-          {
-            id: 987,
-            name: 'Abebe',
-            gender: 1,
-            salary: 5499,
-            dateOfBirth: '2020-12-21',
-          },
-          {
-            id: 120,
-            name: 'Askalech',
-            gender: 0,
-            salary: 4290,
-            dateOfBirth: '2010-06-08',
-          },
-          {
-            id: 6,
-            name: 'Tariku',
-            gender: 1,
-            salary: 9520,
-            dateOfBirth: '1993-12-27',
-          },
-        ])
-      )
-      dispatch(cancelRequest())
-    }, 2000)
+    dispatch(getEmployeesRequest())
   }
 
   return (
@@ -95,7 +63,7 @@ export function EmployeeManagement(props: EmployeeManagementProps) {
         <EmployeeForm
           handleCloseModal={handleCloseAddEmployeeForm}
           employee={state.employees.find(
-            (employee) => employee.id === currentEmployeeId
+            (employee) => employee._id === currentEmployeeId
           )}
         />
       )}
@@ -114,21 +82,29 @@ export function EmployeeManagement(props: EmployeeManagementProps) {
             <path d='M1 10h3v10H1V10zM6 0h3v20H6V0zm5 8h3v12h-3V8zm5-4h3v16h-3V4z' />
           </svg>
           <StyledSizedBox width={4} />
-          <span>{15} employees</span>
+          <span>{state.employees.length} employees</span>
         </div>
         <div>
           <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
             <path d='M1 10h3v10H1V10zM6 0h3v20H6V0zm5 8h3v12h-3V8zm5-4h3v16h-3V4z' />
           </svg>
           <StyledSizedBox width={4} />
-          <span>{5} females</span>
+          <span>
+            {`${
+              state.employees.filter((employee) => employee.gender === 0).length
+            } females`}
+          </span>
         </div>
         <div>
           <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
             <path d='M1 10h3v10H1V10zM6 0h3v20H6V0zm5 8h3v12h-3V8zm5-4h3v16h-3V4z' />
           </svg>
           <StyledSizedBox width={4} />
-          <span>{10} males</span>
+          <span>
+            {`${
+              state.employees.filter((employee) => employee.gender === 1).length
+            } males`}
+          </span>
         </div>
       </StyledSummary>
 
@@ -157,11 +133,11 @@ export function EmployeeManagement(props: EmployeeManagementProps) {
             <div>Actions</div>
           </StyledTableHead>
           {state.employees.map((employee, i) => (
-            <StyledTableRow key={employee.id || i}>
+            <StyledTableRow key={employee._id || i}>
               <div>{i + 1}</div>
               <div>{employee.name}</div>
               <div>{employee.gender ? 'Male' : 'Female'}</div>
-              <div>{employee.dateOfBirth}</div>
+              <div>{employee.dateOfBirth.substr(0, 10)}</div>
               <div>
                 {employee.salary} / <small>month</small>
               </div>
@@ -171,7 +147,7 @@ export function EmployeeManagement(props: EmployeeManagementProps) {
                   color='teal-500'
                   hoverColor='teal-900'
                   disabled={showModal || state.fetching}
-                  onClick={() => handleEditEmployee(employee.id)}
+                  onClick={() => handleEditEmployee(employee._id)}
                 >
                   {/* <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'> */}
                   <path d='M12.3 3.7l4 4L4 20H0v-4L12.3 3.7zm1.4-1.4L16 0l4 4-2.3 2.3-4-4z' />
@@ -183,7 +159,7 @@ export function EmployeeManagement(props: EmployeeManagementProps) {
                   color='red-500'
                   hoverColor='red-900'
                   disabled={showModal || state.fetching}
-                  onClick={() => handleRemoveEmployee(employee.id)}
+                  onClick={() => handleRemoveEmployee(employee._id)}
                 >
                   {/* <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'> */}
                   <path d='M6 2l2-2h4l2 2h4v2H2V2h4zM3 6h14l-1 14H4L3 6zm5 2v10h1V8H8zm3 0v10h1V8h-1z' />

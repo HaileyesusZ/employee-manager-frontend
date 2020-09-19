@@ -59,6 +59,22 @@ const removeEmployee = (id: number): Action => ({
   payload: id,
 })
 
+// request action creators
+
+const getEmployeesRequest = (): Action => ({ type: ACTIONS.FETCHING_EMPLOYEES })
+const updateEmployeeRequest = (employee: Employee): Action => ({
+  type: ACTIONS.UPDATING_EMPLOYEE,
+  payload: employee,
+})
+const removeEmployeeRequest = (id: string): Action => ({
+  type: ACTIONS.REMOVING_EMPLOYEE,
+  payload: id,
+})
+const addEmployeeRequest = (employee: Employee): Action => ({
+  type: ACTIONS.ADDING_EMPLOYEE,
+  payload: employee,
+})
+
 // const SWITCH_THEME = (email:string, password: string) : Action => ({type: ACTIONS.LOGIN, payload: {email, password}})
 
 export {
@@ -70,4 +86,8 @@ export {
   updateEmployee,
   removeEmployee,
   cancelRequest,
+  getEmployeesRequest,
+  updateEmployeeRequest,
+  removeEmployeeRequest,
+  addEmployeeRequest,
 }

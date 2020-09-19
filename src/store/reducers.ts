@@ -17,7 +17,7 @@ const employeeReducer = (
     case ACTIONS.ADD_EMPLOYEE:
       // construct an employee object
       const newEmployee = {
-        id: action.payload.id,
+        _id: action.payload._id,
         name: action.payload.name,
         gender: action.payload.gender,
         salary: action.payload.salary,
@@ -31,7 +31,7 @@ const employeeReducer = (
     case ACTIONS.REMOVE_EMPLOYEE:
       // find the index of the employee to remove
       const indexToRemove = state.findIndex(
-        (employee) => employee.id === action.payload
+        (employee) => employee._id === action.payload
       )
       // remove the employee from the index
       return [
@@ -42,18 +42,17 @@ const employeeReducer = (
     case ACTIONS.UPDATE_EMPLOYEE:
       // find the index of the employee to update
       const indexToUpdate = state.findIndex(
-        (employee) => employee.id === action.payload.id
+        (employee) => employee._id === action.payload._id
       )
       // construct an update employee object
       const updatedEmployee = {
-        id: action.payload.id,
+        _id: action.payload._id,
         name: action.payload.name,
         gender: action.payload.gender,
         salary: action.payload.salary,
         dateOfBirth: action.payload.dateOfBirth,
       }
 
-      console.log('payload', action.payload)
       return [
         ...state.slice(0, indexToUpdate),
         updatedEmployee,

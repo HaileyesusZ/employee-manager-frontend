@@ -2,12 +2,7 @@ import React, { createRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ReactDOM from 'react-dom'
 import Employee from '../interfaces/employee'
-import {
-  addEmployee,
-  updateEmployee,
-  makeRequest,
-  cancelRequest,
-} from '../store/actions'
+import { addEmployeeRequest, updateEmployeeRequest } from '../store/actions'
 import { StyledEmployeeForm } from '../styles/EmployeeForm'
 import {
   StyledAlignSelf,
@@ -32,7 +27,7 @@ export const EmployeeForm = ({
   const [name, setName] = useState<string>(employee ? employee.name : '')
   const [salary, setSalary] = useState<number>(employee ? employee.salary : 0)
   const [dateOfBirth, setDateOfBirth] = useState<string>(
-    employee ? employee.dateOfBirth : ''
+    employee ? employee.dateOfBirth.substr(0, 10) : ''
   )
 
   const fetching = useSelector<AppState, boolean>((state) => state.fetching)
@@ -48,36 +43,31 @@ export const EmployeeForm = ({
     // prevent default form behavior
     e.preventDefault()
     // validate form
-    formRef.current?.reportValidity()
     return (
+      formRef.current !== null &&
+      formRef.current.reportValidity() &&
       name !== '' &&
       (gender === 0 || gender === 1) &&
       dateOfBirth !== '' &&
       dateOfBirth.length === 10 &&
-      salary !== 0
+      salary >= 0
     )
   }
 
   const handleUpdateEmployee = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: number
+    id: string
   ) => {
     if (validate(e)) {
-      dispatch(makeRequest())
-
-      setTimeout(() => {
-        dispatch(
-          updateEmployee({
-            id,
-            name,
-            gender,
-            dateOfBirth,
-            salary,
-          })
-        )
-
-        dispatch(cancelRequest())
-      }, 2000)
+      dispatch(
+        updateEmployeeRequest({
+          _id: id,
+          name,
+          gender,
+          dateOfBirth,
+          salary,
+        })
+      )
 
       handleCloseModal()
     }
@@ -87,25 +77,21 @@ export const EmployeeForm = ({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     if (validate(e)) {
-      dispatch(makeRequest())
-      setTimeout(() => {
-        dispatch(
-          addEmployee({
-            id: Math.random() * 1e12,
-            name,
-            gender,
-            dateOfBirth,
-            salary,
-          })
-        )
-        handleCloseModal()
-        dispatch(cancelRequest())
-      }, 2000)
+      dispatch(
+        addEmployeeRequest({
+          _id: '',
+          name,
+          gender,
+          dateOfBirth,
+          salary,
+        })
+      )
 
-      setName('')
-      setGender(0)
-      setSalary(0)
-      setDateOfBirth('')
+      // setName('')
+      // setGender(0)
+      // setSalary(0)
+      // setDateOfBirth('')
+      handleCloseModal()
     }
   }
 
@@ -161,7 +147,7 @@ export const EmployeeForm = ({
         name='dateOfBirth'
         type='date'
         placeholder='20/12/2020'
-        value={dateOfBirth}
+        value={dateOfBirth.substr(0, 10)}
         disabled={fetching}
         onChange={(e) => setDateOfBirth(e.target.value)}
       />
@@ -171,7 +157,9 @@ export const EmployeeForm = ({
         width={40}
         disabled={fetching}
         onClick={(e) =>
-          employee ? handleUpdateEmployee(e, employee.id) : handleAddEmployee(e)
+          employee
+            ? handleUpdateEmployee(e, employee._id)
+            : handleAddEmployee(e)
         }
       >
         <span> {employee ? 'Update Now' : 'Add Now'} </span>

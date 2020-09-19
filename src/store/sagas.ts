@@ -14,11 +14,7 @@ import { requestData, URL } from '../environment/api'
 // a saga to fetch employees
 function* fetchEmployeeSaga(action: Action) {
   try {
-    const employees = yield call(
-      requestData,
-      URL.BASE_URL + URL.FETCH_EMPLOYEE_URL,
-      action.payload
-    )
+    const employees = yield call(requestData, URL.BASE_URL, null, 'GET')
     yield put(setEmployees(employees))
   } catch (error) {
     yield put(setError(error.message))
@@ -29,11 +25,13 @@ function* fetchEmployeeSaga(action: Action) {
 // a saga to add employee
 function* addEmployeeSaga(action: Action) {
   try {
-    const addedEmployee = yield call(
-      requestData,
-      URL.BASE_URL + URL.ADD_EMPLOYEE_URL,
-      action.payload
-    )
+    const addedEmployee = yield call(requestData, URL.BASE_URL, {
+      name: action.payload.name,
+      gender: action.payload.gender.toString(),
+      salary: action.payload.salary,
+      dateOfBirth: action.payload.dateOfBirth,
+    })
+
     yield put(addEmployee(addedEmployee))
   } catch (error) {
     yield put(setError(error.message))
@@ -44,11 +42,16 @@ function* addEmployeeSaga(action: Action) {
 // a saga to update employees
 function* updateEmployeeSaga(action: Action) {
   try {
-    yield call(requestData, URL.BASE_URL + URL.UPDATE_EMPLOYEE_URL, {
-      id: action.payload.id,
-      employee: action.payload.employee,
-    })
-    yield put(updateEmployee(action.payload.employee))
+    const updated = yield call(
+      requestData,
+      URL.BASE_URL + `/${action.payload._id}`,
+      action.payload,
+      'PATCH'
+    )
+
+    if (updated.hasOwnProperty('success')) {
+      yield put(updateEmployee(action.payload))
+    }
   } catch (error) {
     yield put(setError(error.message))
   } finally {
@@ -58,11 +61,16 @@ function* updateEmployeeSaga(action: Action) {
 // a saga to fetch employees
 function* removeEmployeeSaga(action: Action) {
   try {
-    yield call(requestData, URL.BASE_URL + URL.REMOVE_EMPLOYEE_URL, {
-      id: action.payload.id,
-    })
+    const removed = yield call(
+      requestData,
+      URL.BASE_URL + `/${action.payload}`,
+      null,
+      'DELETE'
+    )
 
-    yield put(removeEmployee(action.payload.id))
+    if (removed.hasOwnProperty('success')) {
+      yield put(removeEmployee(action.payload))
+    }
   } catch (error) {
     yield put(setError(error.message))
   } finally {

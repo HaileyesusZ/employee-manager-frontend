@@ -1,5 +1,5 @@
 interface Employee {
-  id: number
+  _id: string
   name: string
   gender: number
   salary: number

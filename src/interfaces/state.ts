@@ -12,15 +12,7 @@ export interface AppState {
   fetching: FetchingState
 }
 
-const initialEmployeeState: EmployeeState = [
-  {
-    id: 788,
-    name: 'haileyesus',
-    salary: 11000,
-    gender: 1,
-    dateOfBirth: '2020-09-12',
-  },
-]
+const initialEmployeeState: EmployeeState = []
 const initialErrorState: ErrorState = {}
 
 const initialFetchingState: FetchingState = false

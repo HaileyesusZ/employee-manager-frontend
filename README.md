@@ -1,3 +1,9 @@
+Tech Stack
+Typescript
+React Hooks (with Styled Components)
+Redux (with redux saga)
+Tailwindcss
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
